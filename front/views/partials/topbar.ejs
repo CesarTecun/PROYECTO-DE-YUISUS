@@ -1,0 +1,11 @@
+<div class="topbar">
+  <div style="flex:1"></div>
+  <% if (user) { %>
+    <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+    <a class="btn btn-primary" href="/logout">Salir</a>
+  <% } else { %>
+    <a class="btn btn-primary" href="/login">Login</a>
+    <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+  <% } %>
+  <div class="avatar"></div>
+</div>

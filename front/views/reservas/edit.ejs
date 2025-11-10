@@ -8,18 +8,7 @@
 <body>
   <header class="container">
     <h1>Editar reserva</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/reservas">Volver</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
+    <%- include('../partials/navbar', { user: user, active: 'reservas' }) %>
   </header>
   <main class="container">
     <form class="card form" method="post" action="/reservas/<%= item.ID_RESERVA %>">

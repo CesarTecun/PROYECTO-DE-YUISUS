@@ -6,23 +6,19 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Usuarios</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/usuarios/new">Nuevo usuario</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <div class="card">
+  <div class="layout">
+    <aside class="sidebar">
+      <%- include('../partials/sidebar', { user: user, active: 'usuarios' }) %>
+    </aside>
+    <section class="main">
+      <%- include('../partials/topbar', { user: user }) %>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <span style="flex:1"></span>
+            <a class="btn btn-success" href="/usuarios/new">Nuevo usuario</a>
+          </div>
+          <div class="card">
       <table class="table">
         <thead>
           <tr>
@@ -38,16 +34,19 @@
               <td><%= it.ROL %></td>
               <td><%= it.ACTIVO %></td>
               <td>
-                <a href="/usuarios/<%= it.ID_USUARIO %>/edit">Editar</a>
+                <a class="btn" style="border-color:#334155;color:#e5e7eb" href="/usuarios/<%= it.ID_USUARIO %>/edit">Editar</a>
                 <form method="post" action="/usuarios/<%= it.ID_USUARIO %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar usuario?');">
-                  <button type="submit">Eliminar</button>
+                  <button class="btn btn-danger" type="submit">Eliminar</button>
                 </form>
               </td>
             </tr>
           <% } %>
         </tbody>
       </table>
-    </div>
-  </main>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

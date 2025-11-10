@@ -6,35 +6,28 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Editar estadía</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/estadias">Volver</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/estadias/<%= item.ID_RESERVA %>/<%= item.COD_HOTEL %>/<%= item.FECHA_LLEGADA %>">
-      <label>ID Reserva</label>
-      <input value="<%= item.ID_RESERVA %>" disabled />
-      <label>Código Hotel</label>
-      <input value="<%= item.COD_HOTEL %>" disabled />
-      <label>Fecha llegada</label>
-      <input value="<%= item.FECHA_LLEGADA %>" disabled />
-      <label>Fecha partida</label>
-      <input name="partida" value="<%= item.FECHA_PARTIDA %>" required />
-      <label>Régimen</label>
-      <input name="regimen" value="<%= item.REGIMEN %>" required />
-      <button type="submit">Actualizar</button>
-    </form>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <%- include('../partials/sidebar', { user: user, active: 'estadias' }) %>
+    </aside>
+    <section class="main">
+      <%- include('../partials/topbar', { user: user }) %>
+      <div class="content">
+        <form class="card form" method="post" action="/estadias/<%= item.ID_RESERVA %>/<%= item.COD_HOTEL %>/<%= item.FECHA_LLEGADA %>">
+          <label>ID Reserva</label>
+          <input value="<%= item.ID_RESERVA %>" disabled />
+          <label>Código Hotel</label>
+          <input value="<%= item.COD_HOTEL %>" disabled />
+          <label>Fecha llegada</label>
+          <input value="<%= item.FECHA_LLEGADA %>" disabled />
+          <label>Fecha partida</label>
+          <input name="partida" value="<%= item.FECHA_PARTIDA %>" required />
+          <label>Régimen</label>
+          <input name="regimen" value="<%= item.REGIMEN %>" required />
+          <button type="submit">Actualizar</button>
+        </form>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

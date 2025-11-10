@@ -6,23 +6,14 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Nuevo usuario</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/usuarios">Volver</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/usuarios">
+  <div class="layout">
+    <aside class="sidebar">
+      <%- include('../partials/sidebar', { user: user, active: 'usuarios' }) %>
+    </aside>
+    <section class="main">
+      <%- include('../partials/topbar', { user: user }) %>
+      <div class="content">
+        <form class="card form" method="post" action="/usuarios">
       <label>Usuario</label>
       <input name="username" required />
       <label>Nombre completo</label>
@@ -34,7 +25,9 @@
       <label>Contraseña</label>
       <input type="password" name="password" placeholder="(por defecto 'changeme')" />
       <button type="submit">Crear</button>
-    </form>
-  </main>
+        </form>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

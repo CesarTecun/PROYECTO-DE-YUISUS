@@ -1,0 +1,20 @@
+<nav class="nav">
+  <a href="/">Inicio</a>
+  <% if (user) { %>
+    <a href="/sucursales" class="<%= active==='sucursales'?'active':'' %>">Sucursales</a>
+    <a href="/hoteles" class="<%= active==='hoteles'?'active':'' %>">Hoteles</a>
+    <a href="/vuelos" class="<%= active==='vuelos'?'active':'' %>">Vuelos</a>
+    <a href="/turistas" class="<%= active==='turistas'?'active':'' %>">Turistas</a>
+    <a href="/reservas" class="<%= active==='reservas'?'active':'' %>">Reservas</a>
+    <a href="/estadias" class="<%= active==='estadias'?'active':'' %>">Estadías</a>
+    <% if (user && user.rol === 'ADMIN') { %>
+      <a href="/usuarios" class="<%= active==='usuarios'?'active':'' %>">Usuarios</a>
+    <% } %>
+    <span style="flex:1"></span>
+    <span>Hola, <strong><%= user.username %></strong></span>
+    <a href="/logout">Salir</a>
+  <% } else { %>
+    <a href="/login">Login</a>
+    <a href="/register">Registro</a>
+  <% } %>
+</nav>

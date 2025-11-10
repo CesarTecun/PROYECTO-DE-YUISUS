@@ -1,0 +1,19 @@
+<div class="brand">
+  <div class="brand-badge">AV</div>
+  <div>Agencia de Viajes</div>
+</div>
+<div class="side-group">
+  <div class="side-title">Menú</div>
+  <a class="side-link <%= active==='home'?'active':'' %>" href="/">Inicio</a>
+  <% if (user) { %>
+    <a class="side-link <%= active==='sucursales'?'active':'' %>" href="/sucursales">Sucursales</a>
+    <a class="side-link <%= active==='hoteles'?'active':'' %>" href="/hoteles">Hoteles</a>
+    <a class="side-link <%= active==='vuelos'?'active':'' %>" href="/vuelos">Vuelos</a>
+    <a class="side-link <%= active==='turistas'?'active':'' %>" href="/turistas">Turistas</a>
+    <a class="side-link <%= active==='reservas'?'active':'' %>" href="/reservas">Reservas</a>
+    <a class="side-link <%= active==='estadias'?'active':'' %>" href="/estadias">Estadías</a>
+    <% if (user && user.rol === 'ADMIN') { %>
+      <a class="side-link <%= active==='usuarios'?'active':'' %>" href="/usuarios">Usuarios</a>
+    <% } %>
+  <% } %>
+</div>
