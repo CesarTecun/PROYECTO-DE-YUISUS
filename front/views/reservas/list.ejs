@@ -2,17 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Sucursales</title>
+  <title>Reservas</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="container">
-    <h1>Sucursales</h1>
+    <h1>Reservas</h1>
     <nav class="nav">
       <a href="/">Inicio</a>
       <% if (user) { %>
-        <a href="/sucursales/new">Nueva sucursal</a>
-        <a href="/reservas">Reservas</a>
+        <a href="/reservas/new">Nueva reserva</a>
         <span style="flex:1"></span>
         <span>Hola, <strong><%= user.username %></strong></span>
         <a href="/logout">Salir</a>
@@ -26,17 +25,20 @@
     <div class="card">
       <table class="table">
         <thead>
-          <tr><th>Código</th><th>Dirección</th><th>Teléfono</th><th>Acciones</th></tr>
+          <tr>
+            <th>ID</th><th>Fecha</th><th>Turista</th><th>Sucursal</th><th>Acciones</th>
+          </tr>
         </thead>
         <tbody>
           <% for (const it of items) { %>
             <tr>
+              <td><%= it.ID_RESERVA %></td>
+              <td><%= it.FECHA_RESERVA %></td>
+              <td><%= it.COD_TURISTA %></td>
               <td><%= it.COD_SUCURSAL %></td>
-              <td><%= it.DIRECCION %></td>
-              <td><%= it.TELEFONO %></td>
               <td>
-                <a href="/sucursales/<%= it.COD_SUCURSAL %>/edit">Editar</a>
-                <form method="post" action="/sucursales/<%= it.COD_SUCURSAL %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar sucursal <%= it.COD_SUCURSAL %>?');">
+                <a href="/reservas/<%= it.ID_RESERVA %>/edit">Editar</a>
+                <form method="post" action="/reservas/<%= it.ID_RESERVA %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar reserva <%= it.ID_RESERVA %>?');">
                   <button type="submit">Eliminar</button>
                 </form>
               </td>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Editar reserva</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Editar reserva</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/reservas">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/reservas/<%= item.ID_RESERVA %>">
+      <label>ID Reserva</label>
+      <input value="<%= item.ID_RESERVA %>" disabled />
+      <label>Fecha reserva</label>
+      <input value="<%= item.FECHA_RESERVA %>" disabled />
+      <label>Código Turista</label>
+      <input name="codTurista" value="<%= item.COD_TURISTA %>" required />
+      <label>Código Sucursal</label>
+      <input name="codSucursal" value="<%= item.COD_SUCURSAL %>" required />
+      <button type="submit">Actualizar</button>
+    </form>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Segmentos de vuelo</h3>
+      <table class="table">
+        <thead>
+          <tr><th>Número Vuelo</th><th>Secuencia</th><th>Clase</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+          <% for (const s of segmentos) { %>
+            <tr>
+              <td><%= s.NUM_VUELO %></td>
+              <td><%= s.SECUENCIA %></td>
+              <td><%= s.CLASE %></td>
+              <td>
+                <form method="post" action="/reservas/<%= item.ID_RESERVA %>/segmentos/<%= s.NUM_VUELO %>/<%= s.SECUENCIA %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar segmento?');">
+                  <button type="submit">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <form method="post" action="/reservas/<%= item.ID_RESERVA %>/segmentos" class="form">
+        <label>Número de vuelo</label>
+        <input name="numVuelo" required />
+        <label>Clase (TURISTA/PRIMERA)</label>
+        <input name="clase" placeholder="TURISTA" required />
+        <button type="submit">Agregar segmento</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

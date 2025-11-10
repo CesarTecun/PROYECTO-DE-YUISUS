@@ -4,10 +4,26 @@ import { query } from './db.js';
 export async function ensureAdmin() {
   const u = process.env.ADMIN_USER || 'admin';
   const p = process.env.ADMIN_PASSWORD || 'admin123';
-  const rows = await query('SELECT USERNAME FROM USUARIOS_APP WHERE USERNAME = :1', [u]);
-  if (rows.length === 0) {
-    const hash = await bcrypt.hash(p, 10);
-    await query('INSERT INTO USUARIOS_APP (USERNAME, PASSWORD_HASH, NOMBRE_COMPLETO, ROL, ACTIVO) VALUES (:1, :2, :3, :4, :5)', [u, hash, 'Administrador', 'ADMIN', 'S']);
+  const maxAttempts = 40; // ~2 minutos si delay=3s
+  const delayMs = 3000;
+  for (let i = 1; i <= maxAttempts; i++) {
+    try {
+      const rows = await query('SELECT USERNAME FROM USUARIOS_APP WHERE USERNAME = :1', [u]);
+      if (rows.length === 0) {
+        const hash = await bcrypt.hash(p, 10);
+        await query('INSERT INTO USUARIOS_APP (USERNAME, PASSWORD_HASH, NOMBRE_COMPLETO, ROL, ACTIVO) VALUES (:1, :2, :3, :4, :5)', [u, hash, 'Administrador', 'ADMIN', 'S']);
+      }
+      return;
+    } catch (e) {
+      const msg = String(e && e.message || e);
+      const tableMissing = msg.includes('ORA-00942');
+      const poolNotReady = msg.includes('NJS-518') || msg.includes('listener') || msg.includes('service');
+      if (i === maxAttempts || (!tableMissing && !poolNotReady)) {
+        // No es transitorio o agotó reintentos
+        throw e;
+      }
+      await new Promise(r => setTimeout(r, delayMs));
+    }
   }
 }
 

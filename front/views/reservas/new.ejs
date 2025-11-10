@@ -2,20 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Proyecto DX</title>
+  <title>Nueva reserva</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="container">
-    <h1>Proyecto DX - Agencia de Viajes</h1>
+    <h1>Nueva reserva</h1>
     <nav class="nav">
       <a href="/">Inicio</a>
       <% if (user) { %>
-        <a href="/sucursales">Sucursales</a>
-        <a href="/hoteles">Hoteles</a>
-        <a href="/vuelos">Vuelos</a>
-        <a href="/turistas">Turistas</a>
-        <a href="/reservas">Reservas</a>
+        <a href="/reservas">Volver</a>
         <span style="flex:1"></span>
         <span>Hola, <strong><%= user.username %></strong></span>
         <a href="/logout">Salir</a>
@@ -26,9 +22,13 @@
     </nav>
   </header>
   <main class="container">
-    <div class="card">
-      <p>Estado de conexión a BD: <strong><%= status %></strong></p>
-    </div>
+    <form class="card form" method="post" action="/reservas">
+      <label>Código Turista</label>
+      <input name="codTurista" required />
+      <label>Código Sucursal</label>
+      <input name="codSucursal" required />
+      <button type="submit">Crear</button>
+    </form>
   </main>
 </body>
 </html>

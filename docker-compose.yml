@@ -17,22 +17,41 @@ services:
       retries: 20
       start_period: 60s
 
+  db-init:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-db-init
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_PASSWORD}
+    volumes:
+      - ./bd/init:/container-entrypoint-initdb.d:ro
+      - ./scripts/db-init.sh:/db-init.sh:ro
+    entrypoint: ["bash","-lc"]
+    command: "/db-init.sh"
+    restart: "no"
+
   backend:
     build: ./backend
     container_name: app-backend
     depends_on:
       oracle-db:
         condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     environment:
       - PORT=${PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_CONNECT_STRING=${DB_CONNECT_STRING}
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
     ports:
       - "3000:3000"
     volumes:
       - ./backend/src:/usr/src/app/src
-      - ./backend/views:/usr/src/app/views
       - ./front:/usr/src/app/public
     command: ["npm","run","dev"]
 

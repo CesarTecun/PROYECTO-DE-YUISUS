@@ -11,7 +11,11 @@
     <nav class="nav">
       <a href="/">Inicio</a>
       <% if (user) { %>
-        <a href="/hoteles">Volver</a>
+        <a href="/sucursales">Sucursales</a>
+        <a href="/hoteles">Hoteles</a>
+        <a href="/vuelos">Vuelos</a>
+        <a href="/turistas">Turistas</a>
+        <a href="/reservas">Reservas</a>
         <span style="flex:1"></span>
         <span>Hola, <strong><%= user.username %></strong></span>
         <a href="/logout">Salir</a>
