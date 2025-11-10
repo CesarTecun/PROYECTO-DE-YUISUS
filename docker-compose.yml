@@ -1,0 +1,44 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-db
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_PASSWORD}
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - ./bd/init:/container-entrypoint-initdb.d
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'select 1 from dual;' | sqlplus -L -s system/${ORACLE_PASSWORD}@localhost:1521/XEPDB1 | grep -q 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  backend:
+    build: ./backend
+    container_name: app-backend
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CONNECT_STRING=${DB_CONNECT_STRING}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/usr/src/app/src
+      - ./backend/views:/usr/src/app/views
+      - ./front:/usr/src/app/public
+    command: ["npm","run","dev"]
+
+networks:
+  default:
+    name: proyecto_gestion_hoteles
+
+volumes:
+  oracle-data:

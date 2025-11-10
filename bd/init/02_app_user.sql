@@ -1,0 +1,4 @@
+-- Este script queda intencionalmente vacío.
+-- La creación del usuario APP_USER y sus privilegios está en 00_app_user.sql.
+-- La creación de tablas en el esquema APP_USER está en 01_schema.sql.
+-- No es necesario otorgar privilegios sobre objetos al mismo propietario.
