@@ -6,55 +6,75 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Hoteles</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/sucursales">Sucursales</a>
-        <a href="/hoteles">Hoteles</a>
-        <a href="/vuelos">Vuelos</a>
-        <a href="/turistas">Turistas</a>
-        <a href="/reservas">Reservas</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-        <span style="margin-left:12px"></span>
-        <a href="/hoteles/new">Nuevo hotel</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <div class="card">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Código</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>Teléfono</th><th>Plazas</th><th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (const it of items) { %>
-            <tr>
-              <td><%= it.COD_HOTEL %></td>
-              <td><%= it.NOMBRE %></td>
-              <td><%= it.DIRECCION %></td>
-              <td><%= it.CIUDAD %></td>
-              <td><%= it.TELEFONO %></td>
-              <td><%= it.PLAZAS_TOTALES %></td>
-              <td>
-                <a href="/hoteles/<%= it.COD_HOTEL %>/edit">Editar</a>
-                <form method="post" action="/hoteles/<%= it.COD_HOTEL %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar hotel <%= it.COD_HOTEL %>?');">
-                  <button type="submit">Eliminar</button>
-                </form>
-              </td>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link" href="/sucursales">Sucursales</a>
+        <a class="side-link active" href="/hoteles">Hoteles</a>
+        <a class="side-link" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div style="flex:1"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+        <% } %>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <span style="flex:1"></span>
+            <a class="btn btn-success" href="/hoteles/new">Nuevo hotel</a>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Ciudad</th>
+                <th>Teléfono</th>
+                <th>Plazas</th>
+                <th class="th-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (const it of items) { %>
+                <tr>
+                  <td><%= it.COD_HOTEL %></td>
+                  <td><%= it.NOMBRE %></td>
+                  <td><%= it.DIRECCION %></td>
+                  <td><%= it.CIUDAD %></td>
+                  <td><%= it.TELEFONO %></td>
+                  <td><%= it.PLAZAS_TOTALES %></td>
+                  <td>
+                    <div class="td-actions" style="justify-content:flex-end">
+                      <a class="btn" style="border-color:#334155;color:#e5e7eb" href="/hoteles/<%= it.COD_HOTEL %>/edit">Editar</a>
+                      <form method="post" action="/hoteles/<%= it.COD_HOTEL %>/delete" onsubmit="return confirm('¿Eliminar hotel <%= it.COD_HOTEL %>?');">
+                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

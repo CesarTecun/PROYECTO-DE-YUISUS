@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Nuevo turista</title>
+  <title>Editar vuelo</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -17,8 +17,8 @@
         <a class="side-link" href="/">Inicio</a>
         <a class="side-link" href="/sucursales">Sucursales</a>
         <a class="side-link" href="/hoteles">Hoteles</a>
-        <a class="side-link" href="/vuelos">Vuelos</a>
-        <a class="side-link active" href="/turistas">Turistas</a>
+        <a class="side-link active" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
       </div>
     </aside>
     <section class="main">
@@ -35,27 +35,23 @@
       </div>
       <div class="content">
         <div class="panel" style="max-width:560px">
-          <h1>Nuevo turista</h1>
-          <form class="form" method="post" action="/turistas">
-            <label>Código</label>
-            <input class="input" name="cod" required />
-            <label>Nombre 1</label>
-            <input class="input" name="nombre1" required />
-            <label>Nombre 2</label>
-            <input class="input" name="nombre2" />
-            <label>Nombre 3</label>
-            <input class="input" name="nombre3" />
-            <label>Apellido 1</label>
-            <input class="input" name="apellido1" required />
-            <label>Apellido 2</label>
-            <input class="input" name="apellido2" />
-            <label>Dirección</label>
-            <input class="input" name="direccion" />
-            <label>País residencia</label>
-            <input class="input" name="pais" />
+          <h1>Editar vuelo</h1>
+          <form class="form" method="post" action="/vuelos/<%= item.NUM_VUELO %>">
+            <label>Número de vuelo (no editable)</label>
+            <input class="input" value="<%= item.NUM_VUELO %>" disabled />
+            <label>Fecha y hora (YYYY-MM-DDTHH:MM)</label>
+            <input class="input" name="fechaHora" value="<%= item.FECHA_HORA %>" required />
+            <label>Origen</label>
+            <input class="input" name="origen" value="<%= item.ORIGEN %>" required />
+            <label>Destino</label>
+            <input class="input" name="destino" value="<%= item.DESTINO %>" required />
+            <label>Plazas totales</label>
+            <input class="input" type="number" name="plazasTotales" min="0" value="<%= item.PLAZAS_TOTALES %>" />
+            <label>Plazas turista</label>
+            <input class="input" type="number" name="plazasTurista" min="0" value="<%= item.PLAZAS_TURISTA %>" />
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-              <a class="btn" href="/turistas" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
-              <button class="btn btn-success" type="submit">Guardar</button>
+              <a class="btn" href="/vuelos" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
+              <button class="btn btn-success" type="submit">Actualizar</button>
             </div>
           </form>
         </div>

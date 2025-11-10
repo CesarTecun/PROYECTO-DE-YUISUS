@@ -6,77 +6,97 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Editar turista</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/turistas">Volver</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/turistas/<%= item.COD_TURISTA %>">
-      <label>Código (no editable)</label>
-      <input value="<%= item.COD_TURISTA %>" disabled />
-      <label>Nombre 1</label>
-      <input name="nombre1" value="<%= item.NOMBRE1 %>" required />
-      <label>Nombre 2</label>
-      <input name="nombre2" value="<%= item.NOMBRE2 || '' %>" />
-      <label>Nombre 3</label>
-      <input name="nombre3" value="<%= item.NOMBRE3 || '' %>" />
-      <label>Apellido 1</label>
-      <input name="apellido1" value="<%= item.APELLIDO1 %>" required />
-      <label>Apellido 2</label>
-      <input name="apellido2" value="<%= item.APELLIDO2 || '' %>" />
-      <label>Dirección</label>
-      <input name="direccion" value="<%= item.DIRECCION || '' %>" />
-      <label>País residencia</label>
-      <input name="pais" value="<%= item.PAIS_RESIDENCIA || '' %>" />
-      <button type="submit">Actualizar</button>
-    </form>
-
-    <div class="card" style="margin-top:16px">
-      <h3>Emails</h3>
-      <ul>
-        <% for (const e of emails) { %>
-          <li>
-            <%= e.EMAIL %>
-            <form method="post" action="/turistas/<%= item.COD_TURISTA %>/emails/<%= encodeURIComponent(e.EMAIL) %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar email <%= e.EMAIL %>?');">
-              <button type="submit">Eliminar</button>
-            </form>
-          </li>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link" href="/sucursales">Sucursales</a>
+        <a class="side-link" href="/hoteles">Hoteles</a>
+        <a class="side-link" href="/vuelos">Vuelos</a>
+        <a class="side-link active" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div style="flex:1"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
         <% } %>
-      </ul>
-      <form method="post" action="/turistas/<%= item.COD_TURISTA %>/emails">
-        <input name="email" placeholder="nuevo@correo.com" />
-        <button type="submit">Agregar email</button>
-      </form>
-    </div>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="panel" style="max-width:720px">
+          <h1>Editar turista</h1>
+          <form class="form" method="post" action="/turistas/<%= item.COD_TURISTA %>">
+            <label>Código (no editable)</label>
+            <input class="input" value="<%= item.COD_TURISTA %>" disabled />
+            <label>Nombre 1</label>
+            <input class="input" name="nombre1" value="<%= item.NOMBRE1 %>" required />
+            <label>Nombre 2</label>
+            <input class="input" name="nombre2" value="<%= item.NOMBRE2 || '' %>" />
+            <label>Nombre 3</label>
+            <input class="input" name="nombre3" value="<%= item.NOMBRE3 || '' %>" />
+            <label>Apellido 1</label>
+            <input class="input" name="apellido1" value="<%= item.APELLIDO1 %>" required />
+            <label>Apellido 2</label>
+            <input class="input" name="apellido2" value="<%= item.APELLIDO2 || '' %>" />
+            <label>Dirección</label>
+            <input class="input" name="direccion" value="<%= item.DIRECCION || '' %>" />
+            <label>País residencia</label>
+            <input class="input" name="pais" value="<%= item.PAIS_RESIDENCIA || '' %>" />
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+              <a class="btn" href="/turistas" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
+              <button class="btn btn-success" type="submit">Actualizar</button>
+            </div>
+          </form>
 
-    <div class="card" style="margin-top:16px">
-      <h3>Teléfonos</h3>
-      <ul>
-        <% for (const t of tels) { %>
-          <li>
-            <%= t.TELEFONO %>
-            <form method="post" action="/turistas/<%= item.COD_TURISTA %>/telefonos/<%= encodeURIComponent(t.TELEFONO) %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar teléfono <%= t.TELEFONO %>?');">
-              <button type="submit">Eliminar</button>
+          <div class="panel" style="margin-top:16px">
+            <h3>Emails</h3>
+            <ul>
+              <% for (const e of emails) { %>
+                <li>
+                  <%= e.EMAIL %>
+                  <form method="post" action="/turistas/<%= item.COD_TURISTA %>/emails/<%= encodeURIComponent(e.EMAIL) %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar email <%= e.EMAIL %>?');">
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                  </form>
+                </li>
+              <% } %>
+            </ul>
+            <form method="post" action="/turistas/<%= item.COD_TURISTA %>/emails" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+              <input class="input" name="email" placeholder="nuevo@correo.com" />
+              <button class="btn btn-success" type="submit">Agregar email</button>
             </form>
-          </li>
-        <% } %>
-      </ul>
-      <form method="post" action="/turistas/<%= item.COD_TURISTA %>/telefonos">
-        <input name="telefono" placeholder="555-1234" />
-        <button type="submit">Agregar teléfono</button>
-      </form>
-    </div>
-  </main>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <h3>Teléfonos</h3>
+            <ul>
+              <% for (const t of tels) { %>
+                <li>
+                  <%= t.TELEFONO %>
+                  <form method="post" action="/turistas/<%= item.COD_TURISTA %>/telefonos/<%= encodeURIComponent(t.TELEFONO) %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar teléfono <%= t.TELEFONO %>?');">
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                  </form>
+                </li>
+              <% } %>
+            </ul>
+            <form method="post" action="/turistas/<%= item.COD_TURISTA %>/telefonos" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+              <input class="input" name="telefono" placeholder="555-1234" />
+              <button class="btn btn-success" type="submit">Agregar teléfono</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

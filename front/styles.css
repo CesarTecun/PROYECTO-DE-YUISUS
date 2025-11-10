@@ -26,3 +26,36 @@ button:hover{filter:brightness(1.05)}
 .alert.error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fecaca}
 h1{margin:6px 0 10px;font-size:1.5rem}
 a{margin-right:8px}
+
+/* Layout dashboard */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.sidebar{background:#0b1220;border-right:1px solid #1f2937;padding:20px 12px;display:flex;flex-direction:column;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+.brand-badge{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#0b1220;font-weight:900}
+.side-group{margin-top:12px}
+.side-title{font-size:.75rem;color:#64748b;margin:16px 10px 6px}
+.side-link{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:10px;transition:.2s}
+.side-link:hover,.side-link.active{background:#0f172a}
+
+.main{display:flex;flex-direction:column}
+.topbar{height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid #1f2937;background:rgba(17,24,39,.7);backdrop-filter:saturate(140%) blur(8px)}
+.top-search{flex:1;display:flex;align-items:center;gap:10px}
+.input{padding:10px 12px;border:1px solid #334155;background:#0b1220;color:var(--text);border-radius:10px;outline:none;width:100%}
+.input:focus{border-color:var(--accent)}
+.avatar{width:34px;height:34px;border-radius:50%;background:#111827;border:1px solid #1f2937}
+.content{padding:20px}
+.panel{background:rgba(17,24,39,.6);border:1px solid #1f2937;border-radius:14px;padding:18px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid transparent;cursor:pointer;text-decoration:none;font-weight:600}
+.btn:hover{filter:brightness(1.05)}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0b1220}
+.btn-success{background:linear-gradient(90deg,#22c55e,#4ade80);color:#052e16}
+.btn-danger{background:linear-gradient(90deg,#ef4444,#f87171);color:#450a0a}
+
+/* Table utilities */
+.table-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.table-card{background:rgba(17,24,39,.6);border:1px solid #1f2937;border-radius:14px;padding:12px}
+.th-right{text-align:right}
+.td-actions{display:flex;gap:8px}
+

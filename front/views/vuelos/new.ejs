@@ -6,41 +6,57 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Nuevo vuelo</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/sucursales">Sucursales</a>
-        <a href="/hoteles">Hoteles</a>
-        <a href="/vuelos">Vuelos</a>
-        <a href="/turistas">Turistas</a>
-        <a href="/reservas">Reservas</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/vuelos">
-      <label>Número de vuelo</label>
-      <input name="num" required />
-      <label>Fecha y hora (YYYY-MM-DDTHH:MM)</label>
-      <input name="fechaHora" placeholder="2025-01-01T09:00" required />
-      <label>Origen</label>
-      <input name="origen" required />
-      <label>Destino</label>
-      <input name="destino" required />
-      <label>Plazas totales</label>
-      <input type="number" name="plazasTotales" min="0" value="0" />
-      <label>Plazas turista</label>
-      <input type="number" name="plazasTurista" min="0" value="0" />
-      <button type="submit">Guardar</button>
-    </form>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link" href="/sucursales">Sucursales</a>
+        <a class="side-link" href="/hoteles">Hoteles</a>
+        <a class="side-link active" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div style="flex:1"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+        <% } %>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="panel" style="max-width:560px">
+          <h1>Nuevo vuelo</h1>
+          <form class="form" method="post" action="/vuelos">
+            <label>Número de vuelo</label>
+            <input class="input" name="num" required />
+            <label>Fecha y hora (YYYY-MM-DDTHH:MM)</label>
+            <input class="input" name="fechaHora" placeholder="2025-01-01T09:00" required />
+            <label>Origen</label>
+            <input class="input" name="origen" required />
+            <label>Destino</label>
+            <input class="input" name="destino" required />
+            <label>Plazas totales</label>
+            <input class="input" type="number" name="plazasTotales" min="0" value="0" />
+            <label>Plazas turista</label>
+            <input class="input" type="number" name="plazasTurista" min="0" value="0" />
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+              <a class="btn" href="/vuelos" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
+              <button class="btn btn-success" type="submit">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

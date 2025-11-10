@@ -6,41 +6,57 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Editar hotel</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/sucursales">Sucursales</a>
-        <a href="/hoteles">Hoteles</a>
-        <a href="/vuelos">Vuelos</a>
-        <a href="/turistas">Turistas</a>
-        <a href="/reservas">Reservas</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/hoteles/<%= item.COD_HOTEL %>">
-      <label>Código (no editable)</label>
-      <input value="<%= item.COD_HOTEL %>" disabled />
-      <label>Nombre</label>
-      <input name="nombre" value="<%= item.NOMBRE %>" required />
-      <label>Dirección</label>
-      <input name="direccion" value="<%= item.DIRECCION %>" />
-      <label>Ciudad</label>
-      <input name="ciudad" value="<%= item.CIUDAD %>" />
-      <label>Teléfono</label>
-      <input name="telefono" value="<%= item.TELEFONO %>" />
-      <label>Plazas totales</label>
-      <input type="number" name="plazas" min="0" value="<%= item.PLAZAS_TOTALES %>" />
-      <button type="submit">Actualizar</button>
-    </form>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link" href="/sucursales">Sucursales</a>
+        <a class="side-link active" href="/hoteles">Hoteles</a>
+        <a class="side-link" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div style="flex:1"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+        <% } %>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="panel" style="max-width:560px">
+          <h1>Editar hotel</h1>
+          <form class="form" method="post" action="/hoteles/<%= item.COD_HOTEL %>">
+            <label>Código (no editable)</label>
+            <input class="input" value="<%= item.COD_HOTEL %>" disabled />
+            <label>Nombre</label>
+            <input class="input" name="nombre" value="<%= item.NOMBRE %>" required />
+            <label>Dirección</label>
+            <input class="input" name="direccion" value="<%= item.DIRECCION %>" />
+            <label>Ciudad</label>
+            <input class="input" name="ciudad" value="<%= item.CIUDAD %>" />
+            <label>Teléfono</label>
+            <input class="input" name="telefono" value="<%= item.TELEFONO %>" />
+            <label>Plazas totales</label>
+            <input class="input" type="number" name="plazas" min="0" value="<%= item.PLAZAS_TOTALES %>" />
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+              <a class="btn" href="/hoteles" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
+              <button class="btn btn-success" type="submit">Actualizar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

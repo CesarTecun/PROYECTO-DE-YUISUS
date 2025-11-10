@@ -6,31 +6,51 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Nueva sucursal</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/sucursales">Volver</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/sucursales">
-      <label>Código</label>
-      <input name="cod" required />
-      <label>Dirección</label>
-      <input name="direccion" required />
-      <label>Teléfono</label>
-      <input name="telefono" />
-      <button type="submit">Guardar</button>
-    </form>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link active" href="/sucursales">Sucursales</a>
+        <a class="side-link" href="/hoteles">Hoteles</a>
+        <a class="side-link" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div class="top-search"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+        <% } %>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="panel" style="max-width:560px">
+          <h1>Nueva sucursal</h1>
+          <form class="form" method="post" action="/sucursales">
+            <label>Código</label>
+            <input class="input" name="cod" required />
+            <label>Dirección</label>
+            <input class="input" name="direccion" required />
+            <label>Teléfono</label>
+            <input class="input" name="telefono" />
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+              <a class="btn" href="/sucursales" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
+              <button class="btn btn-success" type="submit">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

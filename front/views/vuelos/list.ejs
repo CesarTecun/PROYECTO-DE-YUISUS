@@ -6,55 +6,75 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="container">
-    <h1>Vuelos</h1>
-    <nav class="nav">
-      <a href="/">Inicio</a>
-      <% if (user) { %>
-        <a href="/sucursales">Sucursales</a>
-        <a href="/hoteles">Hoteles</a>
-        <a href="/vuelos">Vuelos</a>
-        <a href="/turistas">Turistas</a>
-        <a href="/reservas">Reservas</a>
-        <span style="flex:1"></span>
-        <span>Hola, <strong><%= user.username %></strong></span>
-        <a href="/logout">Salir</a>
-        <span style="margin-left:12px"></span>
-        <a href="/vuelos/new">Nuevo vuelo</a>
-      <% } else { %>
-        <a href="/login">Login</a>
-        <a href="/register">Registro</a>
-      <% } %>
-    </nav>
-  </header>
-  <main class="container">
-    <div class="card">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Número</th><th>Fecha/Hora</th><th>Origen</th><th>Destino</th><th>Plazas Totales</th><th>Plazas Turista</th><th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (const it of items) { %>
-            <tr>
-              <td><%= it.NUM_VUELO %></td>
-              <td><%= it.FECHA_HORA %></td>
-              <td><%= it.ORIGEN %></td>
-              <td><%= it.DESTINO %></td>
-              <td><%= it.PLAZAS_TOTALES %></td>
-              <td><%= it.PLAZAS_TURISTA %></td>
-              <td>
-                <a href="/vuelos/<%= it.NUM_VUELO %>/edit">Editar</a>
-                <form method="post" action="/vuelos/<%= it.NUM_VUELO %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar vuelo <%= it.NUM_VUELO %>?');">
-                  <button type="submit">Eliminar</button>
-                </form>
-              </td>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
-  </main>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">AV</div>
+        <div>Agencia de Viajes</div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Menú</div>
+        <a class="side-link" href="/">Inicio</a>
+        <a class="side-link" href="/sucursales">Sucursales</a>
+        <a class="side-link" href="/hoteles">Hoteles</a>
+        <a class="side-link active" href="/vuelos">Vuelos</a>
+        <a class="side-link" href="/turistas">Turistas</a>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="topbar">
+        <div style="flex:1"></div>
+        <% if (user) { %>
+          <div style="color:#cbd5e1;">Hola, <strong><%= user.username %></strong></div>
+          <a class="btn btn-primary" href="/logout">Salir</a>
+        <% } else { %>
+          <a class="btn btn-primary" href="/login">Login</a>
+          <a class="btn" href="/register" style="border-color:#334155;color:#e5e7eb">Registro</a>
+        <% } %>
+        <div class="avatar"></div>
+      </div>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <span style="flex:1"></span>
+            <a class="btn btn-success" href="/vuelos/new">Nuevo vuelo</a>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Fecha/Hora</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Plazas Totales</th>
+                <th>Plazas Turista</th>
+                <th class="th-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (const it of items) { %>
+                <tr>
+                  <td><%= it.NUM_VUELO %></td>
+                  <td><%= it.FECHA_HORA %></td>
+                  <td><%= it.ORIGEN %></td>
+                  <td><%= it.DESTINO %></td>
+                  <td><%= it.PLAZAS_TOTALES %></td>
+                  <td><%= it.PLAZAS_TURISTA %></td>
+                  <td>
+                    <div class="td-actions" style="justify-content:flex-end">
+                      <a class="btn" style="border-color:#334155;color:#e5e7eb" href="/vuelos/<%= it.NUM_VUELO %>/edit">Editar</a>
+                      <form method="post" action="/vuelos/<%= it.NUM_VUELO %>/delete" onsubmit="return confirm('¿Eliminar vuelo <%= it.NUM_VUELO %>?');">
+                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
 </body>
 </html>
