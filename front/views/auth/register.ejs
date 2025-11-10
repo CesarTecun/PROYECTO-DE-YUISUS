@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Registro</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Registro</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/sucursales">Sucursales</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Iniciar sesión</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <% if (error) { %>
+      <div class="alert error"><%= error %></div>
+    <% } %>
+    <form class="card form" method="post" action="/register">
+      <label>Nombre completo</label>
+      <input name="nombre" />
+      <label>Usuario</label>
+      <input name="username" required />
+      <label>Contraseña</label>
+      <input type="password" name="password" required />
+      <button type="submit">Crear cuenta</button>
+    </form>
+  </main>
+</body>
+</html>

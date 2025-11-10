@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Nueva sucursal</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Nueva sucursal</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/sucursales">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/sucursales">
+      <label>Código</label>
+      <input name="cod" required />
+      <label>Dirección</label>
+      <input name="direccion" required />
+      <label>Teléfono</label>
+      <input name="telefono" />
+      <button type="submit">Guardar</button>
+    </form>
+  </main>
+</body>
+</html>

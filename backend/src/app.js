@@ -11,19 +11,35 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../views'));
+app.set('views', path.join(__dirname, '..', 'public', 'views'));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../../public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret_dev',
   resave: false,
   saveUninitialized: false
 }));
 
+// Exponer usuario a todas las vistas
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+// Guard global: si no hay sesión, solo permitir login/register
+app.use((req, res, next) => {
+  if (req.session.user) return next();
+  const p = req.path;
+  if (p === '/login' || p === '/register') return next();
+  if ((p === '/login' || p === '/register') && (req.method === 'POST')) return next();
+  return res.redirect('/login');
+});
+
 // Crear admin por defecto al iniciar
 ensureAdmin().catch(err => console.error('ensureAdmin error', err));
 
 app.get('/', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
   try {
     const rows = await query("SELECT 'OK' AS STATUS FROM dual");
     res.render('index', { status: rows[0]?.STATUS || 'N/A', user: req.session.user || null });
