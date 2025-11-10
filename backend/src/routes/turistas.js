@@ -9,27 +9,77 @@ router.get('/', requireAuth, async (req, res) => {
   try {
     const rows = await query(`SELECT COD_TURISTA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2, PAIS_RESIDENCIA
                                FROM TURISTA_AV WHERE ID_BD=1 ORDER BY COD_TURISTA`);
-    res.render('turistas/list', { items: rows });
+    res.render('turistas/list', { 
+      items: rows,
+      error: null,
+      formData: {}
+    });
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    res.status(500).render('error', { error: 'Error al cargar la lista de turistas: ' + e.message });
   }
 });
 
 // Form crear turista
 router.get('/new', requireAuth, (req, res) => {
-  res.render('turistas/new');
+  res.render('turistas/new', { 
+    formData: {},
+    error: null 
+  });
 });
 
 // Crear turista
 router.post('/', requireAuth, async (req, res) => {
   const { cod, nombre1, nombre2, nombre3, apellido1, apellido2, direccion, pais } = req.body;
+  
+  // Validar campos requeridos
+  if (!cod || !nombre1 || !apellido1) {
+    return res.status(400).render('turistas/new', { 
+      error: 'Los campos Código, Primer Nombre y Primer Apellido son obligatorios',
+      formData: req.body
+    });
+  }
+
+  // Validar formato del código (ejemplo: al menos 3 caracteres)
+  if (cod.length < 3) {
+    return res.status(400).render('turistas/new', { 
+      error: 'El código debe tener al menos 3 caracteres',
+      formData: req.body
+    });
+  }
+
   try {
-    await query(`INSERT INTO TURISTA_AV (ID_BD, COD_TURISTA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2, DIRECCION, PAIS_RESIDENCIA)
-                 VALUES (1, :1, :2, :3, :4, :5, :6, :7, :8)`,
-                [cod, nombre1, nombre2 || null, nombre3 || null, apellido1, apellido2 || null, direccion || null, pais || null]);
+    // Verificar si ya existe un turista con el mismo código
+    const existe = await query('SELECT 1 FROM TURISTA_AV WHERE ID_BD=1 AND COD_TURISTA = :1', [cod]);
+    if (existe.length > 0) {
+      return res.status(400).render('turistas/new', { 
+        error: 'Ya existe un turista con este código',
+        formData: req.body
+      });
+    }
+
+    // Insertar el nuevo turista
+    await query(
+      `INSERT INTO TURISTA_AV 
+       (ID_BD, COD_TURISTA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2, DIRECCION, PAIS_RESIDENCIA)
+       VALUES (1, :1, :2, :3, :4, :5, :6, :7, :8)`,
+      [
+        cod, 
+        nombre1, 
+        nombre2 || null, 
+        nombre3 || null, 
+        apellido1, 
+        apellido2 || null, 
+        direccion || null, 
+        pais || null
+      ]
+    );
+    
     res.redirect('/turistas');
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    res.status(500).render('turistas/new', { 
+      error: 'Error al crear el turista: ' + e.message,
+      formData: req.body
+    });
   }
 });
 

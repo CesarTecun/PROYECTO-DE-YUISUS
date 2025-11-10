@@ -1,10 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nuevo usuario</title>
+  <title><%= usuario ? 'Editar' : 'Nuevo' %> Usuario - Panel de Administración</title>
   <link rel="stylesheet" href="/styles.css" />
-</head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .input-with-icon {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 42px;
+      color: #6b7280;
+    }
+    .input-with-icon select, 
+    .input-with-icon input {
+      padding-left: 40px !important;
+      width: 100%;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-auth i {
+      margin-right: 8px;
+    }
+    .form-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .form-header i {
+      font-size: 2.5rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    .form-subtitle {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #10b981;
+    }
+    input:focus + .slider {
+      box-shadow: 0 0 1px #10b981;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .toggle-label {
+      margin-left: 10px;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+  </style>
 <body>
   <div class="layout">
     <aside class="sidebar">
@@ -13,18 +113,77 @@
     <section class="main">
       <%- include('../partials/topbar', { user: user }) %>
       <div class="content">
-        <form class="card form" method="post" action="/usuarios">
-      <label>Usuario</label>
-      <input name="username" required />
-      <label>Nombre completo</label>
-      <input name="nombre" />
-      <label>Rol</label>
-      <input name="rol" placeholder="ADMIN o USUARIO" />
-      <label>Activo</label>
-      <input name="activo" placeholder="S o N" value="S" />
-      <label>Contraseña</label>
-      <input type="password" name="password" placeholder="(por defecto 'changeme')" />
-      <button type="submit">Crear</button>
+        <form class="auth-card" method="post" action="<%= usuario ? `/usuarios/${usuario.ID_USUARIO}/edit` : '/usuarios' %>" style="max-width: 600px; margin: 0 auto;">
+          <div class="form-header">
+            <i class="fas fa-user-<%= usuario ? 'edit' : 'plus' %>"></i>
+            <h1 class="form-title"><%= usuario ? 'Editar Usuario' : 'Nuevo Usuario' %></h1>
+            <p class="form-subtitle"><%= usuario ? 'Actualiza la información del usuario' : 'Complete los datos del nuevo usuario' %></p>
+          </div>
+          
+          <% if (error) { %>
+            <div class="alert error" style="margin-bottom: 1.5rem;">
+              <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
+          <% } %>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <label for="username">Nombre de Usuario</label>
+            <input id="username" name="username" type="text" class="form-control" 
+                   value="<%= formData.username || (usuario ? usuario.USERNAME : '') %>" 
+                   required 
+                   placeholder="Ingrese el nombre de usuario"
+                   <%= usuario ? 'readonly' : '' %> />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-id-card"></i>
+            <label for="nombre">Nombre Completo</label>
+            <input id="nombre" name="nombre" type="text" class="form-control" 
+                   value="<%= formData.nombre || (usuario ? usuario.NOMBRE_COMPLETO : '') %>" 
+                   placeholder="Ingrese el nombre completo" />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-user-tag"></i>
+            <label for="rol">Rol del Usuario</label>
+            <select id="rol" name="rol" class="form-control" required>
+              <option value="">Seleccione un rol</option>
+              <option value="ADMIN" <%= (formData.rol === 'ADMIN' || (usuario && usuario.ROL === 'ADMIN')) ? 'selected' : '' %>>Administrador</option>
+              <option value="USUARIO" <%= (formData.rol === 'USUARIO' || (usuario && usuario.ROL === 'USUARIO')) ? 'selected' : '' %>>Usuario Estándar</option>
+            </select>
+          </div>
+          
+          <div class="toggle-container">
+            <label class="toggle-switch">
+              <input type="checkbox" name="activo" value="S" 
+                     <%= (formData.activo !== 'N' && (!usuario || usuario.ACTIVO === 'S')) ? 'checked' : '' %>>
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Usuario Activo</span>
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-key"></i>
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" class="form-control" 
+                   placeholder="<%= usuario ? 'Dejar en blanco para no cambiar' : 'Dejar en blanco para usar "changeme"' %>"
+                   autocomplete="new-password" />
+            <% if (usuario) { %>
+              <small class="text-gray-500 text-sm">Dejar en blanco para mantener la contraseña actual</small>
+            <% } else { %>
+              <small class="text-gray-500 text-sm">Si no se especifica, se usará 'changeme' como contraseña</small>
+            <% } %>
+          </div>
+          
+          <div class="form-actions">
+            <a href="/usuarios" class="btn-auth" style="background-color: #6b7280;">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn-auth">
+              <i class="fas fa-save"></i> <%= usuario ? 'Actualizar Usuario' : 'Crear Usuario' %>
+            </button>
+          </div>
         </form>
       </div>
     </section>

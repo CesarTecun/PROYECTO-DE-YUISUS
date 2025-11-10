@@ -1,10 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nueva estadía</title>
+  <title>Nueva Estadía - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
-</head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .input-with-icon {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 42px;
+      color: #6b7280;
+    }
+    .input-with-icon select, 
+    .input-with-icon input {
+      padding-left: 40px !important;
+      width: 100%;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-auth i {
+      margin-right: 8px;
+    }
+    .form-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .form-header i {
+      font-size: 2.5rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    .form-subtitle {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+  </style>
 <body>
   <div class="layout">
     <aside class="sidebar">
@@ -13,18 +61,80 @@
     <section class="main">
       <%- include('../partials/topbar', { user: user }) %>
       <div class="content">
-        <form class="card form" method="post" action="/estadias">
-          <label>ID Reserva</label>
-          <input name="idReserva" type="number" required />
-          <label>Código Hotel</label>
-          <input name="codHotel" required />
-          <label>Fecha llegada (YYYY-MM-DD)</label>
-          <input name="llegada" placeholder="2025-01-01" required />
-          <label>Fecha partida (YYYY-MM-DD)</label>
-          <input name="partida" placeholder="2025-01-05" required />
-          <label>Régimen</label>
-          <input name="regimen" placeholder="MEDIA_PENSION o PENSION_COMPLETA" required />
-          <button type="submit">Guardar</button>
+        <form class="auth-card" method="post" action="/estadias" style="max-width: 600px; margin: 0 auto;">
+          <div class="form-header">
+            <i class="fas fa-hotel"></i>
+            <h1 class="form-title">Nueva Estadía</h1>
+            <p class="form-subtitle">Complete los datos de la estadía</p>
+          </div>
+          
+          <% if (error) { %>
+            <div class="alert error" style="margin-bottom: 1.5rem;">
+              <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
+          <% } %>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-ticket-alt"></i>
+            <label for="idReserva">ID de Reserva</label>
+            <input id="idReserva" name="idReserva" type="number" class="form-control" 
+                   value="<%= formData.idReserva || '' %>" required 
+                   placeholder="Ingrese el ID de la reserva" />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-hotel"></i>
+            <label for="codHotel">Hotel</label>
+            <select id="codHotel" name="codHotel" class="form-control" required>
+              <option value="">Seleccione un hotel</option>
+              <% hoteles.forEach(hotel => { 
+                const selected = formData.codHotel === hotel.COD_HOTEL ? 'selected' : '';
+              %>
+                <option value="<%= hotel.COD_HOTEL %>" <%= selected %>>
+                  <%= hotel.COD_HOTEL %> - <%= hotel.NOMBRE %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-sign-in-alt"></i>
+            <label for="llegada">Fecha de Llegada</label>
+            <input id="llegada" name="llegada" type="date" class="form-control" 
+                   value="<%= formData.llegada || '' %>" required 
+                   placeholder="YYYY-MM-DD" />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-sign-out-alt"></i>
+            <label for="partida">Fecha de Partida</label>
+            <input id="partida" name="partida" type="date" class="form-control" 
+                   value="<%= formData.partida || '' %>" required 
+                   placeholder="YYYY-MM-DD" />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-utensils"></i>
+            <label for="regimen">Régimen de Alimentación</label>
+            <select id="regimen" name="regimen" class="form-control" required>
+              <option value="">Seleccione un régimen</option>
+              <option value="MEDIA_PENSION" <%= formData.regimen === 'MEDIA_PENSION' ? 'selected' : '' %>>
+                <i class="fas fa-utensils"></i> Media Pensión
+              </option>
+              <option value="PENSION_COMPLETA" <%= formData.regimen === 'PENSION_COMPLETA' ? 'selected' : '' %>>
+                <i class="fas fa-utensils"></i> Pensión Completa
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-actions">
+            <a href="/estadias" class="btn-auth" style="background-color: #6b7280;">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn-auth">
+              <i class="fas fa-save"></i> Guardar Estadía
+            </button>
+          </div>
         </form>
       </div>
     </section>

@@ -8,25 +8,74 @@ const router = express.Router();
 router.get('/', requireAuth, async (req, res) => {
   try {
     const rows = await query('SELECT COD_SUCURSAL, DIRECCION, TELEFONO FROM SUCURSAL_AV WHERE ID_BD=1 ORDER BY COD_SUCURSAL');
-    res.render('sucursales/list', { items: rows });
+    res.render('sucursales/list', { 
+      items: rows,
+      error: null,
+      formData: {}
+    });
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    res.status(500).render('error', { error: 'Error al cargar la lista de sucursales: ' + e.message });
   }
 });
 
 // Form crear
 router.get('/new', requireAuth, (req, res) => {
-  res.render('sucursales/new');
+  res.render('sucursales/new', {
+    formData: {},
+    error: null
+  });
 });
 
 // Crear
 router.post('/', requireAuth, async (req, res) => {
   const { cod, direccion, telefono } = req.body;
+  
+  // Validar campos requeridos
+  if (!cod || !direccion) {
+    return res.status(400).render('sucursales/new', { 
+      error: 'Los campos Código y Dirección son obligatorios',
+      formData: req.body
+    });
+  }
+
+  // Validar formato del código (ejemplo: al menos 3 caracteres)
+  if (cod.length < 3) {
+    return res.status(400).render('sucursales/new', { 
+      error: 'El código debe tener al menos 3 caracteres',
+      formData: req.body
+    });
+  }
+
+  // Validar formato de teléfono (opcional)
+  if (telefono && !/^[0-9\s\-+()]+$/.test(telefono)) {
+    return res.status(400).render('sucursales/new', { 
+      error: 'El formato del teléfono no es válido',
+      formData: req.body
+    });
+  }
+
   try {
-    await query('INSERT INTO SUCURSAL_AV (ID_BD, COD_SUCURSAL, DIRECCION, TELEFONO) VALUES (1, :1, :2, :3)', [cod, direccion, telefono]);
+    // Verificar si ya existe una sucursal con el mismo código
+    const existe = await query('SELECT 1 FROM SUCURSAL_AV WHERE ID_BD=1 AND COD_SUCURSAL = :1', [cod]);
+    if (existe.length > 0) {
+      return res.status(400).render('sucursales/new', { 
+        error: 'Ya existe una sucursal con este código',
+        formData: req.body
+      });
+    }
+
+    // Insertar la nueva sucursal
+    await query(
+      'INSERT INTO SUCURSAL_AV (ID_BD, COD_SUCURSAL, DIRECCION, TELEFONO) VALUES (1, :1, :2, :3)', 
+      [cod, direccion, telefono || null]
+    );
+    
     res.redirect('/sucursales');
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    res.status(500).render('sucursales/new', { 
+      error: 'Error al crear la sucursal: ' + e.message,
+      formData: req.body
+    });
   }
 });
 

@@ -1,45 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nuevo turista</title>
+  <title>Nuevo Turista - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <%- include('../partials/sidebar', { user: user, active: 'turistas' }) %>
-    </aside>
-    <section class="main">
-      <%- include('../partials/topbar', { user: user }) %>
-      <div class="content">
-        <div class="panel" style="max-width:560px">
-          <h1>Nuevo turista</h1>
-          <form class="form" method="post" action="/turistas">
-            <label>Código</label>
-            <input class="input" name="cod" required />
-            <label>Nombre 1</label>
-            <input class="input" name="nombre1" required />
-            <label>Nombre 2</label>
-            <input class="input" name="nombre2" />
-            <label>Nombre 3</label>
-            <input class="input" name="nombre3" />
-            <label>Apellido 1</label>
-            <input class="input" name="apellido1" required />
-            <label>Apellido 2</label>
-            <input class="input" name="apellido2" />
-            <label>Dirección</label>
-            <input class="input" name="direccion" />
-            <label>País residencia</label>
-            <input class="input" name="pais" />
-            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-              <a class="btn" href="/turistas" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
-              <button class="btn btn-success" type="submit">Guardar</button>
-            </div>
-          </form>
-        </div>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card" style="max-width: 800px;">
+      <div class="auth-header">
+        <div class="auth-logo">AV</div>
+        <h1 class="auth-title">Nuevo Turista</h1>
+        <p class="auth-subtitle">Complete el formulario para registrar un nuevo turista</p>
       </div>
-    </section>
+
+      <% if (error) { %>
+        <div class="alert error" style="margin-bottom: 1.5rem;"><%= error %></div>
+      <% } %>
+
+      <form class="auth-form" method="post" action="/turistas" id="turistaForm">
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label for="cod">Código de Turista *</label>
+            <input 
+              type="text" 
+              id="cod" 
+              name="cod" 
+              class="form-control" 
+              value="<%= formData && formData.cod || '' %>"
+              placeholder="Ej: TUR001"
+              required 
+              minlength="3"
+              autofocus
+            />
+            <small class="text-muted">Mínimo 3 caracteres</small>
+          </div>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label for="nombre1">Primer Nombre *</label>
+            <input 
+              type="text" 
+              id="nombre1" 
+              name="nombre1" 
+              class="form-control" 
+              value="<%= formData && formData.nombre1 || '' %>"
+              placeholder="Ej: Juan"
+              required
+            />
+          </div>
+          
+          <div class="form-group" style="flex: 1;">
+            <label for="nombre2">Segundo Nombre</label>
+            <input 
+              type="text" 
+              id="nombre2" 
+              name="nombre2" 
+              class="form-control" 
+              value="<%= formData && formData.nombre2 || '' %>"
+              placeholder="Ej: Carlos"
+            />
+          </div>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label for="apellido1">Primer Apellido *</label>
+            <input 
+              type="text" 
+              id="apellido1" 
+              name="apellido1" 
+              class="form-control" 
+              value="<%= formData && formData.apellido1 || '' %>"
+              placeholder="Ej: Pérez"
+              required
+            />
+          </div>
+          
+          <div class="form-group" style="flex: 1;">
+            <label for="apellido2">Segundo Apellido</label>
+            <input 
+              type="text" 
+              id="apellido2" 
+              name="apellido2" 
+              class="form-control" 
+              value="<%= formData && formData.apellido2 || '' %>"
+              placeholder="Ej: González"
+            />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="direccion">Dirección</label>
+          <input 
+            type="text" 
+            id="direccion" 
+            name="direccion" 
+            class="form-control" 
+            value="<%= formData && formData.direccion || '' %>"
+            placeholder="Ej: Av. Principal #123, Col. Centro"
+          />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+          <label for="pais">País de Residencia</label>
+          <input 
+            type="text" 
+            id="pais" 
+            name="pais" 
+            class="form-control" 
+            value="<%= formData && formData.pais || '' %>"
+            placeholder="Ej: México"
+            list="paises"
+          />
+          <datalist id="paises">
+            <option value="México">
+            <option value="Estados Unidos">
+            <option value="Canadá">
+            <option value="España">
+            <option value="Argentina">
+            <option value="Colombia">
+            <option value="Brasil">
+          </datalist>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <a href="/turistas" class="btn-auth btn-secondary" style="flex: 1; text-align: center;">
+            Cancelar
+          </a>
+          <button type="submit" class="btn-auth btn-primary" style="flex: 1;">
+            Registrar Turista
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <script>
+    // Validación del formulario
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('turistaForm');
+      const codInput = document.getElementById('cod');
+      
+      // Validar código al perder el foco
+      codInput.addEventListener('blur', function() {
+        if (this.value.length < 3) {
+          this.setCustomValidity('El código debe tener al menos 3 caracteres');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+
+      // Validar antes de enviar
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,27 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nueva reserva</title>
+  <title>Nueva Reserva - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .input-with-icon {
+      position: relative;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    .input-with-icon select, 
+    .input-with-icon input {
+      padding-left: 40px !important;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-auth i {
+      margin-right: 8px;
+    }
+    .select2-container {
+      width: 100% !important;
+    }
+    .select2-selection {
+      height: 42px !important;
+      display: flex !important;
+      align-items: center;
+    }
+  </style>
 </head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <%- include('../partials/sidebar', { user: user, active: 'reservas' }) %>
-    </aside>
-    <section class="main">
-      <%- include('../partials/topbar', { user: user }) %>
-      <div class="content">
-        <form class="card form" method="post" action="/reservas">
-          <label>Código Turista</label>
-          <input name="codTurista" required />
-          <label>Código Sucursal</label>
-          <input name="codSucursal" required />
-          <button type="submit">Crear</button>
-        </form>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card" style="max-width: 800px;">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h1 class="auth-title">Nueva Reserva</h1>
+        <p class="auth-subtitle">Complete el formulario para registrar una nueva reserva</p>
       </div>
-    </section>
+
+      <% if (error) { %>
+        <div class="alert error" style="margin-bottom: 1.5rem;">
+          <i class="fas fa-exclamation-circle"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <form class="auth-form" method="post" action="/reservas" id="reservaForm">
+        <div class="form-group">
+          <label for="codTurista">Seleccione un Turista *</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <select 
+              id="codTurista" 
+              name="codTurista" 
+              class="form-control" 
+              required
+              data-placeholder="Buscar turista..."
+            >
+              <option value="">Seleccione un turista...</option>
+              <% turistas.forEach(turista => { %>
+                <option value="<%= turista.cod %>" 
+                  <%= formData && formData.codTurista == turista.cod ? 'selected' : '' %>>
+                  <%= turista.nombre %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          <small class="text-muted">Busque y seleccione un turista de la lista</small>
+        </div>
+
+        <div class="form-group">
+          <label for="codSucursal">Sucursal *</label>
+          <div class="input-with-icon">
+            <i class="fas fa-store"></i>
+            <select 
+              id="codSucursal" 
+              name="codSucursal" 
+              class="form-control" 
+              required
+              data-placeholder="Seleccione una sucursal..."
+            >
+              <option value="">Seleccione una sucursal...</option>
+              <% sucursales.forEach(sucursal => { %>
+                <option value="<%= sucursal.COD_SUCURSAL %>"
+                  <%= formData && formData.codSucursal == sucursal.COD_SUCURSAL ? 'selected' : '' %>>
+                  <%= sucursal.COD_SUCURSAL %> - <%= sucursal.DIRECCION %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          <small class="text-muted">Seleccione la sucursal donde se realiza la reserva</small>
+        </div>
+
+        <div class="form-actions">
+          <a href="/reservas" class="btn-auth btn-secondary">
+            <i class="fas fa-times"></i> Cancelar
+          </a>
+          <button type="submit" class="btn-auth btn-primary">
+            <i class="fas fa-save"></i> Guardar Reserva
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <!-- Select2 para búsquedas avanzadas -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  
+  <script>
+    // Inicializar Select2
+    $(document).ready(function() {
+      $('#codTurista, #codSucursal').select2({
+        width: '100%',
+        placeholder: function() {
+          return $(this).data('placeholder');
+        },
+        allowClear: true
+      });
+
+      // Validación del formulario
+      const form = document.getElementById('reservaForm');
+      
+      form.addEventListener('submit', function(event) {
+        // Validar que se haya seleccionado un turista
+        const turistaSelect = document.getElementById('codTurista');
+        if (!turistaSelect.value) {
+          event.preventDefault();
+          alert('Por favor seleccione un turista');
+          return false;
+        }
+
+        // Validar que se haya seleccionado una sucursal
+        const sucursalSelect = document.getElementById('codSucursal');
+        if (!sucursalSelect.value) {
+          event.preventDefault();
+          alert('Por favor seleccione una sucursal');
+          return false;
+        }
+
+        return true;
+      });
+    });
+  </script>
 </body>
 </html>

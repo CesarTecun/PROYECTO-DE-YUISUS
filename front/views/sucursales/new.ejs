@@ -1,35 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nueva sucursal</title>
+  <title>Nueva Sucursal - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <%- include('../partials/sidebar', { user: user, active: 'sucursales' }) %>
-    </aside>
-    <section class="main">
-      <%- include('../partials/topbar', { user: user }) %>
-      <div class="content">
-        <div class="panel" style="max-width:560px">
-          <h1>Nueva sucursal</h1>
-          <form class="form" method="post" action="/sucursales">
-            <label>Código</label>
-            <input class="input" name="cod" required />
-            <label>Dirección</label>
-            <input class="input" name="direccion" required />
-            <label>Teléfono</label>
-            <input class="input" name="telefono" />
-            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-              <a class="btn" href="/sucursales" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
-              <button class="btn btn-success" type="submit">Guardar</button>
-            </div>
-          </form>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card" style="max-width: 700px;">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <i class="fas fa-store-alt"></i>
         </div>
+        <h1 class="auth-title">Nueva Sucursal</h1>
+        <p class="auth-subtitle">Complete el formulario para registrar una nueva sucursal</p>
       </div>
-    </section>
+
+      <% if (error) { %>
+        <div class="alert error" style="margin-bottom: 1.5rem;">
+          <i class="fas fa-exclamation-circle"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <form class="auth-form" method="post" action="/sucursales" id="sucursalForm">
+        <div class="form-group">
+          <label for="cod">Código de Sucursal *</label>
+          <div class="input-with-icon">
+            <i class="fas fa-hashtag"></i>
+            <input 
+              type="text" 
+              id="cod" 
+              name="cod" 
+              class="form-control" 
+              value="<%= formData && formData.cod || '' %>"
+              placeholder="Ej: SUC001"
+              required 
+              minlength="3"
+              autofocus
+            />
+          </div>
+          <small class="text-muted">Ingrese un código único de al menos 3 caracteres</small>
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Dirección Completa *</label>
+          <div class="input-with-icon">
+            <i class="fas fa-map-marker-alt"></i>
+            <input 
+              type="text" 
+              id="direccion" 
+              name="direccion" 
+              class="form-control" 
+              value="<%= formData && formData.direccion || '' %>"
+              placeholder="Ej: Av. Principal #123, Col. Centro"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label for="telefono">Teléfono</label>
+            <div class="input-with-icon">
+              <i class="fas fa-phone"></i>
+              <input 
+                type="tel" 
+                id="telefono" 
+                name="telefono" 
+                class="form-control" 
+                value="<%= formData && formData.telefono || '' %>"
+                placeholder="Ej: +52 55 1234 5678"
+                pattern="[0-9\s\-+()]+"
+              />
+            </div>
+            <small class="text-muted">Formato: +52 55 1234 5678</small>
+          </div>
+        </div>
+
+        <div class="form-actions" style="margin-top: 2rem;">
+          <a href="/sucursales" class="btn-auth btn-secondary">
+            <i class="fas fa-times"></i> Cancelar
+          </a>
+          <button type="submit" class="btn-auth btn-primary">
+            <i class="fas fa-save"></i> Guardar Sucursal
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <style>
+    .input-with-icon {
+      position: relative;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    .input-with-icon input {
+      padding-left: 40px !important;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    .btn-auth i {
+      margin-right: 8px;
+    }
+  </style>
+
+  <script>
+    // Validación del formulario
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('sucursalForm');
+      const codInput = document.getElementById('cod');
+      const telefonoInput = document.getElementById('telefono');
+      
+      // Formatear teléfono
+      telefonoInput.addEventListener('input', function(e) {
+        // Eliminar todo lo que no sea número, espacio, +, - o paréntesis
+        this.value = this.value.replace(/[^0-9\s\-+()]/g, '');
+      });
+
+      // Validar código al perder el foco
+      codInput.addEventListener('blur', function() {
+        if (this.value.length < 3) {
+          this.setCustomValidity('El código debe tener al menos 3 caracteres');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+
+      // Validar antes de enviar
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      });
+    });
+  </script>
 </body>
 </html>

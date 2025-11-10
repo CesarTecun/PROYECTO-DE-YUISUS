@@ -1,41 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Nuevo hotel</title>
+  <title>Nuevo hotel - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <%- include('../partials/sidebar', { user: user, active: 'hoteles' }) %>
-    </aside>
-    <section class="main">
-      <%- include('../partials/topbar', { user: user }) %>
-      <div class="content">
-        <div class="panel" style="max-width:560px">
-          <h1>Nuevo hotel</h1>
-          <form class="form" method="post" action="/hoteles">
-            <label>Código</label>
-            <input class="input" name="cod" required />
-            <label>Nombre</label>
-            <input class="input" name="nombre" required />
-            <label>Dirección</label>
-            <input class="input" name="direccion" />
-            <label>Ciudad</label>
-            <input class="input" name="ciudad" />
-            <label>Teléfono</label>
-            <input class="input" name="telefono" />
-            <label>Plazas totales</label>
-            <input class="input" type="number" name="plazas" min="0" value="0" />
-            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-              <a class="btn" href="/hoteles" style="border-color:#334155;color:#e5e7eb">Cancelar</a>
-              <button class="btn btn-success" type="submit">Guardar</button>
-            </div>
-          </form>
-        </div>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">AV</div>
+        <h1 class="auth-title">Nuevo Hotel</h1>
+        <p class="auth-subtitle">Complete el formulario para registrar un nuevo hotel</p>
       </div>
-    </section>
+
+      <% if (error) { %>
+        <div class="alert error" style="margin-bottom: 1.5rem;"><%= error %></div>
+      <% } %>
+
+      <form class="auth-form" method="post" action="/hoteles">
+        <div class="form-group">
+          <label for="cod">Código del Hotel *</label>
+          <input 
+            type="text" 
+            id="cod" 
+            name="cod" 
+            class="form-control" 
+            value="<%= formData && formData.cod || '' %>"
+            placeholder="Ej: H001"
+            required 
+            autofocus
+          />
+          <small class="text-muted">Código único identificador del hotel</small>
+        </div>
+
+        <div class="form-group">
+          <label for="nombre">Nombre del Hotel *</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            name="nombre" 
+            class="form-control" 
+            value="<%= formData && formData.nombre || '' %>"
+            placeholder="Ej: Hotel Playa del Sol"
+            required
+          />
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label for="ciudad">Ciudad</label>
+            <input 
+              type="text" 
+              id="ciudad" 
+              name="ciudad" 
+              class="form-control" 
+              value="<%= formData && formData.ciudad || '' %>"
+              placeholder="Ej: Cancún"
+            />
+          </div>
+          
+          <div class="form-group" style="flex: 1;">
+            <label for="plazas">Plazas</label>
+            <input 
+              type="number" 
+              id="plazas" 
+              name="plazas" 
+              class="form-control" 
+              min="0" 
+              value="<%= formData && formData.plazas || '0' %>"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input 
+            type="text" 
+            id="direccion" 
+            name="direccion" 
+            class="form-control" 
+            value="<%= formData && formData.direccion || '' %>"
+            placeholder="Dirección completa del hotel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input 
+            type="tel" 
+            id="telefono" 
+            name="telefono" 
+            class="form-control" 
+            value="<%= formData && formData.telefono || '' %>"
+            placeholder="+52 998 123 4567"
+          />
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+          <a href="/hoteles" class="btn-auth btn-secondary" style="flex: 1; text-align: center;">
+            Cancelar
+          </a>
+          <button type="submit" class="btn-auth btn-primary" style="flex: 1;">
+            Guardar Hotel
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </body>
 </html>
