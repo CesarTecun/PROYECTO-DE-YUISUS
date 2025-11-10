@@ -142,9 +142,19 @@ router.get('/:id/edit', requireAuth, async (req, res) => {
                                FROM RESERVA_VUELO_AV
                                WHERE ID_BD=1 AND ID_RESERVA=:1
                                ORDER BY SECUENCIA`, [Number(id)]);
-    res.render('reservas/edit', { item: r[0], segmentos: segs });
+    res.render('reservas/edit', { 
+      item: r[0], 
+      segmentos: segs,
+      error: null,
+      user: req.session.user
+    });
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    res.status(500).render('reservas/edit', { 
+      item: {}, 
+      segmentos: [],
+      error: 'Error al cargar la reserva: ' + e.message,
+      user: req.session.user
+    });
   }
 });
 
@@ -153,11 +163,47 @@ router.post('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
   const { codTurista, codSucursal } = req.body;
   try {
+    // Validar campos requeridos
+    if (!codTurista || !codSucursal) {
+      const [r, segs] = await Promise.all([
+        query(`SELECT ID_RESERVA, FECHA_RESERVA, COD_TURISTA, COD_SUCURSAL 
+               FROM RESERVA_AV WHERE ID_BD=1 AND ID_RESERVA=:1`, [Number(id)]),
+        query(`SELECT NUM_VUELO, SECUENCIA, CLASE 
+               FROM RESERVA_VUELO_AV 
+               WHERE ID_BD=1 AND ID_RESERVA=:1 
+               ORDER BY SECUENCIA`, [Number(id)])
+      ]);
+      
+      return res.status(400).render('reservas/edit', { 
+        item: r[0] || { ID_RESERVA: id },
+        segmentos: segs,
+        error: 'Todos los campos son obligatorios',
+        formData: req.body,
+        user: req.session.user
+      });
+    }
+    
     await query(`UPDATE RESERVA_AV SET COD_TURISTA=:1, COD_SUCURSAL=:2 WHERE ID_BD=1 AND ID_RESERVA=:3`,
       [codTurista, codSucursal, Number(id)]);
     res.redirect('/reservas');
   } catch (e) {
-    res.status(500).send('Error: ' + e.message);
+    console.error('Error al actualizar la reserva:', e);
+    const [r, segs] = await Promise.all([
+      query(`SELECT ID_RESERVA, FECHA_RESERVA, COD_TURISTA, COD_SUCURSAL 
+             FROM RESERVA_AV WHERE ID_BD=1 AND ID_RESERVA=:1`, [Number(id)]),
+      query(`SELECT NUM_VUELO, SECUENCIA, CLASE 
+             FROM RESERVA_VUELO_AV 
+             WHERE ID_BD=1 AND ID_RESERVA=:1 
+             ORDER BY SECUENCIA`, [Number(id)])
+    ]);
+    
+    res.status(500).render('reservas/edit', { 
+      item: r[0] || { ID_RESERVA: id },
+      segmentos: segs,
+      error: 'Error al actualizar la reserva: ' + e.message,
+      formData: req.body,
+      user: req.session.user
+    });
   }
 });
 

@@ -1,57 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Editar reserva</title>
+  <title>Editar Reserva - Agencia de Viajes</title>
   <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .input-with-icon {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 42px;
+      color: #6b7280;
+    }
+    .input-with-icon input, 
+    .input-with-icon select {
+      padding-left: 40px !important;
+      width: 100%;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-auth i {
+      margin-right: 8px;
+    }
+    .form-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .form-header i {
+      font-size: 2.5rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    .form-subtitle {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+    .card {
+      margin-bottom: 2rem;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    .table th, .table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .table th {
+      background-color: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+    }
+  </style>
 </head>
 <body>
-  <header class="container">
-    <h1>Editar reserva</h1>
-    <%- include('../partials/navbar', { user: user, active: 'reservas' }) %>
-  </header>
-  <main class="container">
-    <form class="card form" method="post" action="/reservas/<%= item.ID_RESERVA %>">
-      <label>ID Reserva</label>
-      <input value="<%= item.ID_RESERVA %>" disabled />
-      <label>Fecha reserva</label>
-      <input value="<%= item.FECHA_RESERVA %>" disabled />
-      <label>Código Turista</label>
-      <input name="codTurista" value="<%= item.COD_TURISTA %>" required />
-      <label>Código Sucursal</label>
-      <input name="codSucursal" value="<%= item.COD_SUCURSAL %>" required />
-      <button type="submit">Actualizar</button>
-    </form>
-
-    <div class="card" style="margin-top:16px">
-      <h3>Segmentos de vuelo</h3>
-      <table class="table">
-        <thead>
-          <tr><th>Número Vuelo</th><th>Secuencia</th><th>Clase</th><th>Acciones</th></tr>
-        </thead>
-        <tbody>
-          <% for (const s of segmentos) { %>
-            <tr>
-              <td><%= s.NUM_VUELO %></td>
-              <td><%= s.SECUENCIA %></td>
-              <td><%= s.CLASE %></td>
-              <td>
-                <form method="post" action="/reservas/<%= item.ID_RESERVA %>/segmentos/<%= s.NUM_VUELO %>/<%= s.SECUENCIA %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar segmento?');">
-                  <button type="submit">Eliminar</button>
-                </form>
-              </td>
-            </tr>
+  <div class="layout">
+    <aside class="sidebar">
+      <%- include('../partials/sidebar', { user: user, active: 'reservas' }) %>
+    </aside>
+    <section class="main">
+      <%- include('../partials/topbar', { user: user }) %>
+      <div class="content">
+        <form class="auth-card" method="post" action="/reservas/<%= item.ID_RESERVA %>" style="max-width: 800px; margin: 0 auto;">
+          <div class="form-header">
+            <i class="fas fa-calendar-check"></i>
+            <h1 class="form-title">Editar Reserva #<%= item.ID_RESERVA %></h1>
+            <p class="form-subtitle">Actualice los datos de la reserva</p>
+          </div>
+          
+          <% if (error) { %>
+            <div class="alert error" style="margin-bottom: 1.5rem;">
+              <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
           <% } %>
-        </tbody>
-      </table>
-      <form method="post" action="/reservas/<%= item.ID_RESERVA %>/segmentos" class="form">
-        <label>Número de vuelo</label>
-        <input name="numVuelo" required />
-        <label>Clase (TURISTA/PRIMERA)</label>
-        <input name="clase" placeholder="TURISTA" required />
-        <button type="submit">Agregar segmento</button>
-      </form>
-    </div>
-  </main>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-ticket-alt"></i>
+            <label for="idReserva">ID Reserva</label>
+            <input id="idReserva" type="text" class="form-control" 
+                   value="<%= item.ID_RESERVA %>" disabled />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="far fa-calendar"></i>
+            <label for="fechaReserva">Fecha de Reserva</label>
+            <input id="fechaReserva" type="text" class="form-control" 
+                   value="<%= item.FECHA_RESERVA %>" disabled />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-user-tag"></i>
+            <label for="codTurista">Código de Turista</label>
+            <input id="codTurista" name="codTurista" type="text" class="form-control" 
+                   value="<%= item.COD_TURISTA %>" required 
+                   placeholder="Ingrese el código del turista" />
+          </div>
+          
+          <div class="input-with-icon">
+            <i class="fas fa-store"></i>
+            <label for="codSucursal">Código de Sucursal</label>
+            <input id="codSucursal" name="codSucursal" type="text" class="form-control" 
+                   value="<%= item.COD_SUCURSAL %>" required 
+                   placeholder="Ingrese el código de la sucursal" />
+          </div>
+          
+          <div class="form-actions">
+            <a href="/reservas" class="btn-auth" style="background-color: #6b7280;">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn-auth">
+              <i class="fas fa-save"></i> Actualizar Reserva
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
 </body>
 </html>
