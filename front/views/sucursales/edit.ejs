@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Editar sucursal</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Editar sucursal</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/sucursales">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/sucursales/<%= item.COD_SUCURSAL %>">
+      <label>Código (no editable)</label>
+      <input value="<%= item.COD_SUCURSAL %>" disabled />
+      <label>Dirección</label>
+      <input name="direccion" value="<%= item.DIRECCION %>" required />
+      <label>Teléfono</label>
+      <input name="telefono" value="<%= item.TELEFONO %>" />
+      <button type="submit">Actualizar</button>
+    </form>
+  </main>
+</body>
+</html>

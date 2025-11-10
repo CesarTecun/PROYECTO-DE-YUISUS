@@ -5,6 +5,9 @@ import { query } from './db.js';
 import session from 'express-session';
 import { ensureAdmin, authenticate, requireAuth } from './auth.js';
 import bcrypt from 'bcryptjs';
+import sucursalesRouter from './routes/sucursales.js';
+import hotelesRouter from './routes/hoteles.js';
+import vuelosRouter from './routes/vuelos.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,28 +92,11 @@ app.post('/register', async (req, res) => {
   }
 });
 
-app.get('/sucursales', requireAuth, async (req, res) => {
-  try {
-    const rows = await query('SELECT COD_SUCURSAL, DIRECCION, TELEFONO FROM SUCURSAL_AV WHERE ID_BD=1 ORDER BY COD_SUCURSAL');
-    res.render('sucursales/list', { items: rows });
-  } catch (e) {
-    res.status(500).send('Error: ' + e.message);
-  }
-});
 
-app.get('/sucursales/new', requireAuth, (req, res) => {
-  res.render('sucursales/new');
-});
-
-app.post('/sucursales', requireAuth, async (req, res) => {
-  const { cod, direccion, telefono } = req.body;
-  try {
-    await query('INSERT INTO SUCURSAL_AV (ID_BD, COD_SUCURSAL, DIRECCION, TELEFONO) VALUES (1, :1, :2, :3)', [cod, direccion, telefono]);
-    res.redirect('/sucursales');
-  } catch (e) {
-    res.status(500).send('Error: ' + e.message);
-  }
-});
+// Routers modulares
+app.use('/sucursales', sucursalesRouter);
+app.use('/hoteles', hotelesRouter);
+app.use('/vuelos', vuelosRouter);
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port, () => console.log('Backend listening on ' + port));

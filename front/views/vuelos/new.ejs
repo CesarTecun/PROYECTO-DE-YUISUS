@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Nuevo vuelo</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Nuevo vuelo</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/vuelos">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/vuelos">
+      <label>Número de vuelo</label>
+      <input name="num" required />
+      <label>Fecha y hora (YYYY-MM-DDTHH:MM)</label>
+      <input name="fechaHora" placeholder="2025-01-01T09:00" required />
+      <label>Origen</label>
+      <input name="origen" required />
+      <label>Destino</label>
+      <input name="destino" required />
+      <label>Plazas totales</label>
+      <input type="number" name="plazasTotales" min="0" value="0" />
+      <label>Plazas turista</label>
+      <input type="number" name="plazasTurista" min="0" value="0" />
+      <button type="submit">Guardar</button>
+    </form>
+  </main>
+</body>
+</html>
