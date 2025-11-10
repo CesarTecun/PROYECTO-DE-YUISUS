@@ -20,6 +20,11 @@
           <a class="side-link" href="/hoteles">Hoteles</a>
           <a class="side-link" href="/vuelos">Vuelos</a>
           <a class="side-link" href="/turistas">Turistas</a>
+          <a class="side-link" href="/reservas">Reservas</a>
+          <a class="side-link" href="/estadias">Estadías</a>
+          <% if (user && user.rol === 'ADMIN') { %>
+            <a class="side-link" href="/usuarios">Usuarios</a>
+          <% } %>
         <% } %>
       </div>
     </aside>
