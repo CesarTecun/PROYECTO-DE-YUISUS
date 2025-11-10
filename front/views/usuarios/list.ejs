@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Usuarios</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Usuarios</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/usuarios/new">Nuevo usuario</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <div class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Activo</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const it of items) { %>
+            <tr>
+              <td><%= it.ID_USUARIO %></td>
+              <td><%= it.USERNAME %></td>
+              <td><%= it.NOMBRE_COMPLETO %></td>
+              <td><%= it.ROL %></td>
+              <td><%= it.ACTIVO %></td>
+              <td>
+                <a href="/usuarios/<%= it.ID_USUARIO %>/edit">Editar</a>
+                <form method="post" action="/usuarios/<%= it.ID_USUARIO %>/delete" style="display:inline" onsubmit="return confirm('¿Eliminar usuario?');">
+                  <button type="submit">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

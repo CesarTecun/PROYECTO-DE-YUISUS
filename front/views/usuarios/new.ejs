@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Nuevo usuario</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Nuevo usuario</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/usuarios">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/usuarios">
+      <label>Usuario</label>
+      <input name="username" required />
+      <label>Nombre completo</label>
+      <input name="nombre" />
+      <label>Rol</label>
+      <input name="rol" placeholder="ADMIN o USUARIO" />
+      <label>Activo</label>
+      <input name="activo" placeholder="S o N" value="S" />
+      <label>Contraseña</label>
+      <input type="password" name="password" placeholder="(por defecto 'changeme')" />
+      <button type="submit">Crear</button>
+    </form>
+  </main>
+</body>
+</html>

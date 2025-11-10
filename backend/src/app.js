@@ -10,6 +10,8 @@ import hotelesRouter from './routes/hoteles.js';
 import vuelosRouter from './routes/vuelos.js';
 import turistasRouter from './routes/turistas.js';
 import reservasRouter from './routes/reservas.js';
+import estadiasRouter from './routes/estadias.js';
+import usuariosRouter from './routes/usuarios.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,6 +103,8 @@ app.use('/hoteles', hotelesRouter);
 app.use('/vuelos', vuelosRouter);
 app.use('/turistas', turistasRouter);
 app.use('/reservas', reservasRouter);
+app.use('/estadias', estadiasRouter);
+app.use('/usuarios', usuariosRouter);
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port, () => console.log('Backend listening on ' + port));

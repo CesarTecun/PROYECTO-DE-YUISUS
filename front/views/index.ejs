@@ -16,6 +16,10 @@
         <a href="/vuelos">Vuelos</a>
         <a href="/turistas">Turistas</a>
         <a href="/reservas">Reservas</a>
+        <a href="/estadias">Estadías</a>
+        <% if (user && user.rol === 'ADMIN') { %>
+          <a href="/usuarios">Usuarios</a>
+        <% } %>
         <span style="flex:1"></span>
         <span>Hola, <strong><%= user.username %></strong></span>
         <a href="/logout">Salir</a>

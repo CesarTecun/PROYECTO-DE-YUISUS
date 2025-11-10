@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Editar usuario</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Editar usuario</h1>
+    <nav class="nav">
+      <a href="/">Inicio</a>
+      <% if (user) { %>
+        <a href="/usuarios">Volver</a>
+        <span style="flex:1"></span>
+        <span>Hola, <strong><%= user.username %></strong></span>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registro</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <form class="card form" method="post" action="/usuarios/<%= item.ID_USUARIO %>">
+      <label>Usuario</label>
+      <input value="<%= item.USERNAME %>" disabled />
+      <label>Nombre completo</label>
+      <input name="nombre" value="<%= item.NOMBRE_COMPLETO || '' %>" />
+      <label>Rol</label>
+      <select name="rol">
+        <% const current = item.ROL; %>
+        <% for (const r of roles) { %>
+          <option value="<%= r.ROL %>" <%= r.ROL === current ? 'selected' : '' %>><%= r.ROL %></option>
+        <% } %>
+        <% if (!roles.find(r => r.ROL === 'ADMIN')) { %>
+          <option value="ADMIN" <%= current === 'ADMIN' ? 'selected' : '' %>>ADMIN</option>
+        <% } %>
+        <% if (!roles.find(r => r.ROL === 'USUARIO')) { %>
+          <option value="USUARIO" <%= current === 'USUARIO' ? 'selected' : '' %>>USUARIO</option>
+        <% } %>
+      </select>
+      <label>Activo</label>
+      <select name="activo">
+        <option value="S" <%= item.ACTIVO === 'S' ? 'selected' : '' %>>S</option>
+        <option value="N" <%= item.ACTIVO === 'N' ? 'selected' : '' %>>N</option>
+      </select>
+      <button type="submit">Guardar</button>
+    </form>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Resetear contraseña</h3>
+      <form class="form" method="post" action="/usuarios/<%= item.ID_USUARIO %>/reset">
+        <label>Nueva contraseña</label>
+        <input type="password" name="password" placeholder="changeme" />
+        <button type="submit">Resetear</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
